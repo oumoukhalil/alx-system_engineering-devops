@@ -1,6 +1,7 @@
-# manifest to create file in tmp directory
-file { '/tmp/school':
-  ensure  => present,
+# Creating pupepet file
+
+file {'school':
+  ensure  => 'file',
   path    => '/tmp/school',
   mode    => '0744',
   owner   => 'www-data',
