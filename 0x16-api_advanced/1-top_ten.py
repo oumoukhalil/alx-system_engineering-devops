@@ -1,23 +1,32 @@
 #!/usr/bin/python3
-"""Exports data in the CSV format"""
+"""
+The module requestes allow us to send httprequests using python
+"""
 
-if __name__ == "__main__":
+import requests
 
-    import csv
-    import requests
-    import sys
 
-    userId = sys.argv[1]
-    user = requests.get("https://jsonplaceholder.typicode.com/users/{}"
-                        .format(userId))
-    name = user.json().get('username')
-    todos = requests.get('https://jsonplaceholder.typicode.com/todos')
+def top_ten(subreddit):
+    """
+    print the titles of the 10 hot posts
 
-    filename = userId + '.csv'
-    with open(filename, mode='w') as f:
-        writer = csv.writer(f, delimiter=',', quotechar='"',
-                            quoting=csv.QUOTE_ALL, lineterminator='\n')
-        for task in todos.json():
-            if task.get('userId') == int(userId):
-                writer.writerow([userId, name, str(task.get('completed')),
-                                 task.get('title')])
+    args:
+
+    subreddit(str)
+
+    return
+
+    None
+    """
+    url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
+    hders = {"User-Agent": "Custom User Agent"}
+    prms = {"limit": 10}
+    res = requests.get(url, headers=hders, params=prms, allow_redirects=False)
+    if res.status_code == 200:
+        to_json = res.json()
+        posts = to_json['data']['children']
+        for post in posts:
+            title = post['data']['title']
+            print(title)
+    elif res.status_code == 404:
+        print("None")
